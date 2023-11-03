@@ -1,9 +1,54 @@
 .products-container {
+  padding: 0px 30px;
+
   .product-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    min-width: 100%;
+    margin: 3% 0px;
+
+    .product-item {
+      max-width: 300px;
+      margin-bottom: 40px;
+    }
+
     .product-item-image {
-      img {
-        width: 20%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-height: 300px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #dcb177;
+        height: 90%;
       }
+
+      img {
+        width: 95%;
+        object-fit: cover;
+      }
+    }
+
+    .product-item-content {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0px;
+      gap: 5px;
+
+      h3 {
+        font-size: 1.3rem;
+        font-family: "Windsor Pro", sans-serif;
+        letter-spacing: 1px;
+      }
+    }
+    .addToCart-button {
+      align-self: end;
+      background-color: #2b2a2b;
+      color: #fff;
+      width: 100%;
+      padding: 10px;
     }
   }
 }

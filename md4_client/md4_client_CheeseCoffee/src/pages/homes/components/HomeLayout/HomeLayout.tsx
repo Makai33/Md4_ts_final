@@ -1,4 +1,15 @@
-export default function HomeLayout() {
+import { StoreType } from "@/stores";
+// import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import "./homeLayout.scss";
+
+function HomeLayout() {
+  // const [show, setShow] = useState(false);
+  const navigate = useNavigate();
+  // const handleClose = () => setShow(false);
+  const categoryStore = useSelector((store: StoreType) => store.categoryStore);
+
   return (
     <>
       {/* Carousel wrapper */}
@@ -35,7 +46,7 @@ export default function HomeLayout() {
           {/* Single item */}
           <div className="carousel-item active">
             <img
-              src="https://scontent.fsgn2-10.fna.fbcdn.net/v/t39.30808-6/379999684_707859818036641_5333489429331845994_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=5f2048&_nc_ohc=9BTmIlB-agoAX8gz80a&_nc_oc=AQkTTbybx4nRJT4TzlICo85pHDfINa4pMjcATtGF3DMwGCrYn2DR0xmZim0VKAtpicg&_nc_ht=scontent.fsgn2-10.fna&oh=00_AfAfXy77prQZA9lX8q01343hAgKFKlobUDP20zr4ZcCLeQ&oe=6542A2ED"
+              src="https://scontent.fsgn5-8.fna.fbcdn.net/v/t39.30808-6/379999684_707859818036641_5333489429331845994_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=5f2048&_nc_ohc=JlVS7BkKrHwAX_LsxQq&_nc_oc=AQkD9Oilc9OoM-1UJSuIEGvZKVIyilfM7h5npqsGU9TKX-r4Y8hOKznZB1U0xu-VcrM&_nc_ht=scontent.fsgn5-8.fna&oh=00_AfC0OjbSi7ttROtdh_8IgwGFE-S_0DPS_hF9Y8oXGh7UmA&oe=654891AD"
               className="d-block w-100"
               alt="CheeseQuan1"
             />
@@ -47,7 +58,7 @@ export default function HomeLayout() {
           {/* Single item */}
           <div className="carousel-item">
             <img
-              src="https://scontent.fsgn2-4.fna.fbcdn.net/v/t39.30808-6/354521593_653330856822871_5182743587779714989_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=5f2048&_nc_ohc=vX-3cgDt_w0AX8z1nkg&_nc_ht=scontent.fsgn2-4.fna&oh=00_AfAFXLifW7gJk9n7pRNY2xoqoVXyeGcnC2PaK45yBthqEQ&oe=6543AA2E"
+              src="https://scontent.fsgn5-8.fna.fbcdn.net/v/t39.30808-6/356863635_660170366138920_2595602435113914012_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=5f2048&_nc_ohc=Iwl6qGWAL0QAX8dfaE0&_nc_ht=scontent.fsgn5-8.fna&oh=00_AfD8FBRrExtEGrBGGt3ILRwudgIq4-9GxkcLlr4C008Tsw&oe=6548A3C1"
               className="d-block w-100"
               alt="Canyon at Nigh"
             />
@@ -59,7 +70,7 @@ export default function HomeLayout() {
           {/* Single item */}
           <div className="carousel-item">
             <img
-              src="https://scontent.fsgn2-10.fna.fbcdn.net/v/t39.30808-6/367071244_687250600097563_2850512828186736171_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=5f2048&_nc_ohc=FWoqfBhHgG4AX91Ix_w&_nc_ht=scontent.fsgn2-10.fna&oh=00_AfAJTaMAs-JZ1mBX2il3zVZrt0Tcju17cfyxC3qjaU8ZLQ&oe=65429A8C"
+              src="https://scontent.fsgn5-9.fna.fbcdn.net/v/t39.30808-6/322413311_1516190348905727_6146514292928922769_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=5f2048&_nc_ohc=MyssA_ZkZWUAX_tDeqX&_nc_ht=scontent.fsgn5-9.fna&oh=00_AfChDDa3gmOMP5zsZSmGG2tg0DQLRNIOWtcKEj1gbd0vdw&oe=65495D53"
               className="d-block w-100"
               alt="Cliff Above a Stormy Sea"
             />
@@ -93,6 +104,27 @@ export default function HomeLayout() {
         </button>
       </div>
       {/* Carousel wrapper */}
+      <div className="search_categories">
+        <h4>List Categories</h4>
+        <div className="category_list">
+          {categoryStore.data?.map((category: any, index: number) => (
+            <div
+              className="category_card"
+              key={Math.random() * Date.now()}
+              onClick={() => {
+                navigate(`/collections/${category.id}`);
+                handleClose();
+              }}
+            >
+              <div className="category_card_item">
+                <img src={category.avatar} alt="" />
+              </div>
+              <p>{category.title}</p>
+            </div>
+          ))}
+        </div>
+      </div>
     </>
   );
 }
+export default HomeLayout;

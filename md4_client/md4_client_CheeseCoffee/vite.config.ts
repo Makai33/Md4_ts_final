@@ -7,12 +7,12 @@ import { fileURLToPath } from "url";
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    alias: [
-      {
-        find: "@",
-        replacement: path.resolve(__dirname, "src"),
-      },
-    ],
+    alias: {
+      "@": `${path.resolve(__dirname, "./src/")}`,
+      "@routes": `${path.resolve(__dirname, "./src/routes/")}`,
+      "@utils": `${path.resolve(__dirname, "./src/utils/")}`,
+      "@slices": `${path.resolve(__dirname, "./src/stores/slices/")}`,
+    },
   },
 
   /* Config Global Scss Variable */

@@ -83,7 +83,13 @@ export default function Login() {
                 <p className="error-message">{passwordError}</p>
               )}
             </div>
-            <button type="submit" className="login_btn">
+            <button
+              type="submit"
+              className="login_btn"
+              onClick={() => {
+                navigate(`/`);
+              }}
+            >
               Login
             </button>
           </form>

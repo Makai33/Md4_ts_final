@@ -1,0 +1,133 @@
+.nav-icon {
+  background-color: black;
+  color: #494949;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 20px;
+  border-width: 0;
+  .fa-solid:hover {
+    color: rgb(240, 160, 23);
+  }
+}
+.page_top {
+  height: 10px;
+  background-color: rgb(187, 187, 187);
+}
+.search_top {
+  width: 100%;
+  max-width: 1410px;
+  /* Set the desired maximum width */
+  // margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  // background-color: black;
+
+  .search_input {
+    width: 100%;
+    border: 1px solid rgb(255, 255, 255);
+    padding: 15px;
+    i {
+      color: rgb(240, 160, 23);
+    }
+    input {
+      outline: none;
+      width: 80%;
+      border: 1px solid rgb(255, 255, 255);
+    }
+  }
+}
+
+.search_body {
+  text-align: center;
+  border-top: 1px dotted darkgoldenrod;
+  width: 100%;
+  max-width: 1410px;
+  font-family: $content_font;
+  // display: flex;
+  // padding-top: 5px;
+  margin: 0 auto;
+  // gap: 10px;
+
+  .search_categories {
+    // width: 50%;
+    // gap: 5px;
+    margin-left: 20px;
+    h4 {
+      padding-bottom: 15px;
+    }
+    .category_list {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      .category_card {
+        display: flex;
+        gap: 10px;
+        // flex-direction: column;
+        width: 200px;
+        height: 120px;
+        .category_card_item {
+          img {
+            height: 120px;
+            width: auto;
+            object-fit: cover;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+    p {
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  }
+
+  .container_search {
+    width: 80%;
+    max-width: 1410px;
+    /* Set the desired maximum width */
+    margin: 0 auto;
+    /* Center the content horizontally */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    .search_item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      width: 23%;
+      height: 150px;
+
+      img {
+        width: 100px;
+        height: 100px;
+        cursor: pointer;
+      }
+
+      .name_item_search {
+        padding-left: 10%;
+      }
+    }
+  }
+}
+
+.offcanvas {
+  min-height: 60vh;
+  padding: auto 10px;
+  // --bs-offcanvas-height: 55vh;
+}
+
+.btn-primary {
+  border: none;
+
+  &:hover {
+    background-color: #494949;
+  }
+}

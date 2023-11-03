@@ -1,24 +1,138 @@
-import { useState } from "react";
-// import Button from 'react-bootstrap/Button';
+import Button from "react-bootstrap/Button";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import { Popconfirm } from "antd";
-import { useNavigate } from "react-router-dom";
 import "./cart.scss";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
+import api from "@/services/api";
+import { useDispatch } from "react-redux";
+import { Popconfirm } from "antd";
+const text = "Are you sure to delete this task?";
+const description = "Delete product";
 
-function OffCanvasExample({ name, ...props }) {
-  const [show, setShow] = useState(false);
+type OffcanvasPlacement = "top" | "bottom" | "start" | "end";
+
+interface OffCanvasExampleProps {
+  name: string;
+  placement: OffcanvasPlacement | undefined; // Use the defined union type
+}
+
+interface Product {
+  id: string;
+  name: string;
+  avatar: string;
+  price: number;
+  des: string;
+  categoryId: string;
+  productPictures: {
+    id: string;
+    path: string;
+  }[];
+}
+
+interface CartItem {
+  productId: string;
+  quantity: number;
+  price: number;
+}
+
+interface CartItemDetail extends CartItem {
+  productDetail: Product;
+}
+
+interface newGuestReceipt {
+  email: string;
+  phoneNumber: string;
+  total: number;
+  payMode: string;
+}
+
+function OffCanvasExample({ name, placement }: OffCanvasExampleProps) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
+  // const dispatch = useDispatch();
+  const [show, setShow] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const [cart, setCart] = useState<CartItemDetail[]>([]);
+
+  async function formatCart() {
+    setIsLoading(true);
+    const cartTemp: CartItemDetail[] = [];
+    const carts: CartItem[] = JSON.parse(localStorage.getItem("carts") ?? "[]");
+    for (const i in carts) {
+      const productDetail = await api.productApi
+        .findById(carts[i].productId)
+        .then((res) => res.data.data);
+      cartTemp.push({
+        ...carts[i],
+        productDetail,
+      });
+    }
+    setCart(cartTemp);
+    setIsLoading(false);
+  }
+
+  useEffect(() => {
+    formatCart();
+  }, [localStorage.getItem("carts")]);
+
+  const handleIncreaseQuantity = (index: number) => {
+    const updatedCart = [...cart];
+    updatedCart[index].quantity += 1;
+    localStorage.setItem("carts", JSON.stringify(updatedCart));
+    setCart(updatedCart);
+  };
+
+  const handleDecreaseQuantity = (index: number) => {
+    const updatedCart = [...cart];
+    if (updatedCart[index].quantity > 1) {
+      updatedCart[index].quantity -= 1;
+      localStorage.setItem("carts", JSON.stringify(updatedCart));
+      setCart(updatedCart);
+    }
+  };
+
+  const handleDeleteProduct = (productId: string) => {
+    const updatedCart = cart.filter((item) => item.productId != productId);
+    localStorage.setItem("carts", JSON.stringify(updatedCart));
+    setCart(updatedCart);
+    // console.log("productId", productId)
+  };
+
+  const subTotal = cart.reduce((total, item) => {
+    return total + item.quantity * item.productDetail.price;
+  }, 0);
+
+  const cartQuantity = cart.reduce((total, item) => {
+    return total + item.quantity;
+  }, 0);
 
   return (
     <>
-      <button variant="primary" onClick={handleShow} className="nav-icon">
+      <button onClick={handleShow} className="nav-icon">
         <i className="fa-solid fa-cart-shopping"></i>
+        {cartQuantity}
       </button>
-      <Offcanvas show={show} onHide={handleClose} {...props}>
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title className="text-warning">Your cart</Offcanvas.Title>
+      <Offcanvas show={show} onHide={handleClose} placement={placement}>
+        <Offcanvas.Header className="cart-header">
+          <Offcanvas.Title className="text-warning">
+            <mark className="h6">
+              <strong>
+                {t("Your cart:")} {cart.length}
+              </strong>
+            </mark>
+          </Offcanvas.Title>
+          <Button
+            variant="outline-secondary"
+            onClick={handleClose}
+            className="close-button"
+          >
+            <i className="fa-solid fa-xmark"></i>
+          </Button>
         </Offcanvas.Header>
         <Offcanvas.Body className="cart-body">
           {/* <p>
@@ -30,66 +144,82 @@ function OffCanvasExample({ name, ...props }) {
             Congrat! You get free shipping!
           </p> */}
           <div className="cart-products">
-            <div className="cart-product">
-              <div className="cart-product-img">
-                <img
-                  style={{ width: "70px" }}
-                  src="https://images.foody.vn/res/g31/307624/s400x400/894ca522-26bf-4aa9-8257-75237cf1-d57a4f99-230914095820.jpeg"
-                  alt="product1"
-                />
-              </div>
-              <div className="cart-product-infor">
-                <h6 className="cart-product-name">
-                  OVOCADO MILK TEA - TRÀ SỮA BƠ OLIVE
-                </h6>
-                <p className="cart-product-price">55,000</p>
-                <p className="cart-product-quantity-title">QUANTITY</p>
-                <div className="cart-product-quantity">
-                  <button>
-                    <span className="material-symbols-outlined">remove</span>
-                  </button>
-                  <button>
-                    <span className="material-symbols-outlined">add</span>
-                  </button>
+            {isLoading ? (
+              <div className="d-flex justify-content-center loading-wrapper">
+                <div className="spinner-border" role="status">
+                  <span className="visually-hidden">Loading...</span>
                 </div>
-                {/* <div>
-                  <p>Frequency</p>
-                  <select name="" id="">
-                    <option>1 week ship every</option>
-                    <option>2 week </option>
-                    <option>3 week </option>
-                    <option>4 week </option>
-                  </select>
-                </div> */}
               </div>
-              <div className="delete-button">
-                <Popconfirm
-                  title="Delete Cart Item?"
-                  description="Are you sure to delete this item?"
-                  /*     onConfirm={confirm}
-                                    onCancel={cancel}*/
-                  okText="Yes"
-                  cancelText="No"
-                >
-                  <button>
-                    <span className="material-symbols-outlined">close</span>
-                  </button>
-                </Popconfirm>
-              </div>
-            </div>
+            ) : cart.length > 0 ? (
+              cart?.map((product: any, index: number) => (
+                <div className="cart-product" key={product.productId}>
+                  <div className="cart-product-img">
+                    <img src={product.productDetail.avatar} alt="" />
+                  </div>
+                  <div className="cart-product-infor">
+                    <h5 className="cart-product-name">
+                      {product.productDetail.name}
+                    </h5>
+                    <p className="cart-product-price">
+                      {product.productDetail.price}.000VND
+                    </p>
+                    <p className="cart-product-quantity-title">QUANTITY</p>
+                    <div className="cart-product-quantity">
+                      <button>
+                        <span
+                          className="material-symbols-outlined"
+                          onClick={() => handleDecreaseQuantity(index)}
+                        >
+                          remove
+                        </span>
+                      </button>
+                      <span className="quantity-number">
+                        {product.quantity}
+                      </span>
+                      <button>
+                        <span
+                          className="material-symbols-outlined"
+                          onClick={() => handleIncreaseQuantity(index)}
+                        >
+                          add
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                  <div className="delete-button">
+                    <Popconfirm
+                      placement="bottomRight"
+                      title={text}
+                      description={description}
+                      onConfirm={() => {
+                        handleDeleteProduct(product.productId);
+                      }}
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                      <button>
+                        <span className="material-symbols-outlined">close</span>
+                      </button>
+                    </Popconfirm>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="cart-empty-text">Your Shopping cart is empty</div>
+            )}
           </div>
-
           <div className="cart-footer">
             <p className="cart-total">
-              <span className="cart-total-label">Subtotal: </span>
-              <span className="cart-total-value">0đ</span>
+              <span className="cart-total-lable">Subtotal</span>
+              <span className="cart-total-value">{subTotal}.000VND</span>
             </p>
             <button
               className="checkoutButton"
               onClick={() => navigate("/checkout")}
             >
-              Checkout
+              Order 🔔
             </button>
+            {/* <button className='checkoutButton' onClick={() => handleOrder()}>Checkout</button> */}
           </div>
         </Offcanvas.Body>
       </Offcanvas>

@@ -43,13 +43,13 @@ function Navbar() {
             loading="lazy"
           />
         </div>
-        <div className="middle-nav">
+        {/* <div className="middle-nav">
           <span>New</span>
           <span>Coffee</span>
           <span>Fruit Tea</span>
           <span>Milktea</span>
           <span>Cake</span>
-        </div>
+        </div> */}
         <div className="right-nav">
           <span className="right-nav-icon">
             <Search />
